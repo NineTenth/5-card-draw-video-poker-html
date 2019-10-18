@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<!-- <title>Five Poker Draw</title> -->
+    <title>Five Poker Draw</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+
+</head>
+
+<body>
+
+<h1 class="uppercase">Five Poker Draw</h1>
+ <div class="absolute"><p><b>Xi</b></p>
+<p><b>Elliot</b></p>
+<p><b>Yaoyu</b></p>
+<p><b>Qian</b></p>
+</div>
+
+
+
+<h2 id="ResultDisplay"></h2>
+
+
+<div class="row">
+	<div onclick="HideandShow(1)" class="column" id="card1">
+		<img style="width:100%;" id="c1">
+		<img class="cardback" style="width:100%;"id="cardback1">
+	</div>
+
+	<div onclick="HideandShow(2)" class="column" id="card2">
+		<img style="width:100%;"id="c2">
+		<img class="cardback" style="width:100%;"id="cardback2">
+	</div>
+
+	<div onclick="HideandShow(3)" class="column" id="card3">
+		<img style="width:100%;"id="c3">
+		<img class="cardback" style="width:100%;"id="cardback3">
+	</div>
+
+	<div onclick="HideandShow(4)" class="column" id="card4">
+		<img style="width:100%;"id="c4">
+		<img class="cardback" style="width:100%;"id="cardback4">
+	</div>
+
+	<div onclick="HideandShow(5)" class="column" id="card5">
+		<img style="width:100%;"id="c5">
+		<img class="cardback" style="width:100%;"id="cardback5">
+	</div>
+</div>
+
+
+
+
+<script>
+
+	Deck = [];
+	SuitNum = 4;
+	ValueSetNum = 13;
+	var suitsName = ["Spade", "Heart", "Club", "Diamond"];
+	var valueName = ["O", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13"];
+
+
+	for (Suit = 0; Suit < SuitNum; Suit ++){
+		for (Value = 0; Value < ValueSetNum; Value ++){
+	        		Deck.push([suitsName[Suit],valueName[Value+1]])
+	 }
+	}
+
+	Deck.sort(function(a,b){return 0.5 - Math.random()});
+
+	HandSize = 5;
+	Hand = [];
+	for (i = 0; i < HandSize*2; i++){
+		Hand.push(Deck[i])
+	}
+
+
+	Hand_val=[];
+	for(i = 0; i < HandSize; i++){
+		if(Hand[i][1] == 1){
+			Hand_val[i] = "a"  
+		} else{
+			if(Hand[i][1] == 11){
+				Hand_val[i] = "j"
+			} else{
+				if(Hand[i][1] == 12){
+					Hand_val[i] = "q"
+				} else{
+					if(Hand[i][1] == 13){
+						Hand_val[i] = "k"
+					} else {Hand_val[i] = Hand[i][1]}
+				}
+			}
+		}
+	}
+
+function Shuffle(cARD){
+	Deck = [];
+	SuitNum = 4;
+	ValueSetNum = 13;
+	var suitsName = ["Spade", "Heart", "Club", "Diamond"];
+	var valueName = ["O", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13"];
+
+	// [value]: ???"q" and "k" pair shows false
+
+	for (Suit = 0; Suit < SuitNum; Suit ++){
+		for (Value = 0; Value < ValueSetNum; Value ++){
+			//Deck.push(suitsName[Suit] + (Value+1) + " ")
+	        		Deck.push([suitsName[Suit],valueName[Value+1]])
+	 }
+	}
+
+	Deck.sort(function(a,b){return 0.5 - Math.random()});
+
+	/** For each draw, we only need top HandSize*2 Decks in maximum **/
+	HandSize = 5;
+	Hand = [];
+	for (i = 0; i < HandSize*2; i++){
+		Hand.push(Deck[i])
+	}
+
+	return Hand
+}
+
+</script>
+
+
+
+<script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+<script src="poker.min.js"></script>
+
+
+<script >
+
+    document.getElementById("c1").src = Poker.getCardImage(1000,Hand[0][0], Hand_val[0]).src;
+    document.getElementById("c2").src = Poker.getCardImage(1000,Hand[1][0], Hand_val[1]).src;
+    document.getElementById("c3").src = Poker.getCardImage(1000,Hand[2][0], Hand_val[2]).src;
+    document.getElementById("c4").src = Poker.getCardImage(1000,Hand[3][0], Hand_val[3]).src;
+    document.getElementById("c5").src = Poker.getCardImage(1000,Hand[4][0], Hand_val[4]).src;
+    document.getElementById("cardback1").src = Poker.getBackImage(1000, '#7A7BB8', '#2E319C').src
+    document.getElementById("cardback2").src = Poker.getBackImage(1000, '#7A7BB8', '#2E319C').src
+    document.getElementById("cardback3").src = Poker.getBackImage(1000, '#7A7BB8', '#2E319C').src
+    document.getElementById("cardback4").src = Poker.getBackImage(1000, '#7A7BB8', '#2E319C').src
+    document.getElementById("cardback5").src = Poker.getBackImage(1000, '#7A7BB8', '#2E319C').src
+    document.getElementById("ResultDisplay").innerHTML = "Select the card/cards you do not want.";
+
+chosen = [];
+
+function IsFlipped(cNum) {
+    return document.getElementById("c" + cNum).style.display == 'none';
+}
+
+
+
+
+function HideandShow(cNum) {
+    var x = document.getElementById("c" + cNum);
+    var y = document.getElementById("cardback" + cNum);
+    if (x.style.display === 'none') {
+        x.style.display = 'block';
+        y.style.display = 'none';
+    } else {
+        x.style.display = 'none';
+        chosen.push([Hand[cNum - 1][0], Hand_val[cNum - 1]]);
+        y.style.display = 'block';
+    }
+    // return chosen
+   // document.getElementById("chosen").innerHTML=chosen;
+}
+
+
+
+</script>
+<script>
+
+
+function JudgeFunction(re){
+
+		var HandsSuitInfo = [Hand[0][0], Hand[1][0],Hand[2][0],Hand[3][0], Hand[4][0]];
+		var HandsValueInfo = [Hand[0][1], Hand[1][1],Hand[2][1],Hand[3][1], Hand[4][1]];
+		HandsSuitInfo.sort(function(a, b){return a - b});
+		HandsValueInfo.sort(function(a, b){return a - b});
+
+
+		ValueCount = [0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+		for (i = 0; i < HandSize; i++){
+			ValueCount[HandsValueInfo[i]] ++;
+		}
+		ValueCount.sort(function(a, b){return b - a});
+
+		var Flush = (HandsSuitInfo[0] == HandsSuitInfo[1] == HandsSuitInfo[2] == HandsSuitInfo[3] == HandsSuitInfo[4]);
+		var Straight = (HandsValueInfo[4]- HandsValueInfo[3] ==1 && HandsValueInfo[3]- HandsValueInfo[2] ==1 && HandsValueInfo[2]- HandsValueInfo[1] ==1 && HandsValueInfo[1]- HandsValueInfo[0] ==1);
+		var StraightFlush = (Boolean(Flush) == true && Boolean(Straight) == true);
+		var RoyalFlush = ( Boolean(Flush) == true && HandsValueInfo[4] == 13 && HandsValueInfo[3] == 12 && HandsValueInfo[2] == 11 && HandsValueInfo[1] == 10 && HandsValueInfo[0] == 1);
+		var FourOfAKind = (ValueCount[0] == 4);
+		var FullHouse = (ValueCount[0] == 3 && ValueCount[1] == 2);
+		var ThreeOfAKind = (ValueCount[0] == 3 && ValueCount[1] == 1);
+		var TwoPair = (ValueCount[0] == 2 && ValueCount[1] == 2);
+		var Pair = (ValueCount[0] == 2 && ValueCount[1] == 1);
+
+		function caseNum(a){
+		if(Boolean(RoyalFlush) == true){return 0} 
+			else if(Boolean(StraightFlush) == true) {return 1}
+				else if(Boolean(FourOfAKind) == true) {return 2}
+					else if(Boolean(FullHouse) == true) {return 3}
+						else if(Boolean(Flush) == true) {return 4}
+							else if(Boolean(Straight) == true) {return 5}
+								else if(Boolean(ThreeOfAKind) == true) {return 6}
+									else if(Boolean(TwoPair) == true) {return 7}
+										else if(Boolean(Pair) == true) {return 8}
+											else {return 9}
+		}
+
+		var judge;
+		switch (caseNum()) {
+		    case 0:
+		        judge = "Royal Flush!!!";
+		        break;
+		    case 1:
+		        judge = "Straight Flush";
+		        break;
+		    case 2:
+		        judge = "Four of a Kind";
+		        break;
+		    case 3:
+		        judge = "Full House";
+		        break;
+		    case 4:
+		        judge = "Flush";
+		        break;
+		    case 5:
+		        judge = "Straight";
+		        break;
+		    case  6:
+		        judge = "Three of a Kind";
+		        break;   
+		    case 7:
+		        judge = "Two Pair";
+		        break;
+		    case  8:
+		        judge = "Pair";
+		        break;
+		    case 9:
+		    	if(HandsValueInfo[0] == 1){judge = "High Card of " + "A"}
+		    		else if(HandsValueInfo[4] == 11){judge = "High Card of " + "J"}
+		    			else if(HandsValueInfo[4] == 12){judge = "High Card of " + "Q"}
+		    				else if(HandsValueInfo[4] == 13){judge = "High Card of " + "K"}
+		    					else{judge = "High Card of " + HandsValueInfo[4];}
+		        }
+	return judge;
+}
+	
+
+click = 0;
+function DealFunction() {
+    Shuffle(Hand);
+    	Hand_val=[];
+	for(i = 0; i < HandSize; i++){
+		if(Hand[i][1] == 1){
+			Hand_val[i] = "a"  
+		} else{
+			if(Hand[i][1] == 11){
+				Hand_val[i] = "j"
+			} else{
+				if(Hand[i][1] == 12){
+					Hand_val[i] = "q"
+				} else{
+					if(Hand[i][1] == 13){
+						Hand_val[i] = "k"
+					} else {Hand_val[i] = Hand[i][1]}
+				}
+			}
+		}
+	}
+	click = 0;
+	document.getElementById("ResultDisplay").innerHTML = "Select the card/cards you do not want.";
+    document.getElementById("c1").src = Poker.getCardImage(1000,Hand[0][0], Hand_val[0]).src;
+    document.getElementById("c2").src = Poker.getCardImage(1000,Hand[1][0], Hand_val[1]).src;
+    document.getElementById("c3").src = Poker.getCardImage(1000,Hand[2][0], Hand_val[2]).src;
+    document.getElementById("c4").src = Poker.getCardImage(1000,Hand[3][0], Hand_val[3]).src;
+    document.getElementById("c5").src = Poker.getCardImage(1000,Hand[4][0], Hand_val[4]).src;
+    document.getElementById("cardback1").src = Poker.getBackImage(1000, '#7A7BB8', '#2E319C').src
+    document.getElementById("cardback2").src = Poker.getBackImage(1000, '#7A7BB8', '#2E319C').src
+    document.getElementById("cardback3").src = Poker.getBackImage(1000, '#7A7BB8', '#2E319C').src
+    document.getElementById("cardback4").src = Poker.getBackImage(1000, '#7A7BB8', '#2E319C').src
+    document.getElementById("cardback5").src = Poker.getBackImage(1000, '#7A7BB8', '#2E319C').src
+    document.getElementById("cardback1").style.display = 'none'
+	document.getElementById("cardback2").style.display = 'none'
+	document.getElementById("cardback3").style.display = 'none'
+	document.getElementById("cardback4").style.display = 'none'
+	document.getElementById("cardback5").style.display = 'none'
+	document.getElementById("c1").style.display = 'block'
+	document.getElementById("c2").style.display = 'block'
+	document.getElementById("c3").style.display = 'block'
+	document.getElementById("c4").style.display = 'block'
+	document.getElementById("c5").style.display = 'block';
+}
+
+function DrawFunction() {
+	if(click==0){
+	    for (var i=0; i<HandSize; i++){
+	        if (IsFlipped(i + 1)){
+	            Hand[i] = Hand[i+5];
+	            if(Hand[i][1] == 1){
+	                Hand_val[i] = "a"  
+	            } else{
+	                if(Hand[i][1] == 11){
+	                    Hand_val[i] = "j"
+	                } else{
+	                    if(Hand[i][1] == 12){
+	                        Hand_val[i] = "q"
+	                    } else{
+	                        if(Hand[i][1] == 13){
+	                            Hand_val[i] = "k"
+	                        } else {Hand_val[i] = Hand[i][1]}
+	                    }
+	                }
+	            }
+	            
+	            document.getElementById("c"+(i+1)).src = Poker.getCardImage(1000,Hand[i][0], Hand_val[i]).src;
+	            document.getElementById("c" + (i+1)).style.display = 'block';
+	            document.getElementById("cardback" + (i+1)).style.display = 'none';
+
+	        }
+	    }
+    click = 1
+    document.getElementById("ResultDisplay").innerHTML = "You have a: " + JudgeFunction();}
+
+    else if (click == 1)
+    	{DealFunction()}
+}
+
+</script>
+
+<div class="grid-container">
+    <div>
+        <button class="Deal" onclick="DealFunction()">Deal</button>
+    </div>
+    <div>
+        <button class="Draw" onclick="DrawFunction()">Draw</button>
+    </div>
+</div>
+
+</body>
+</html>
